@@ -2073,7 +2073,7 @@ class TestMaybeSendToRegistration(ZulipTestCase):
                 confirmation = Confirmation.objects.all().first()
                 confirmation_key = confirmation.confirmation_key
                 self.assertIn('do_confirm/' + confirmation_key, result.url)
-                self.assertEqual(PreregistrationUser.objects.all().count(), 1)
+                self.assertEqual(PreregistrationUser.objects.all().count(), 2)
 
 class TestAdminSetBackends(ZulipTestCase):
 

@@ -301,7 +301,8 @@ def prepare_activation_url(email: str, request: HttpRequest,
     Send an email with a confirmation link to the provided e-mail so the user
     can complete their registration.
     """
-    prereg_user = create_preregistration_user(email, request, realm_creation)
+    full_name = None
+    prereg_user = create_preregistration_user(full_name, email, request, realm_creation)
 
     if streams is not None:
         prereg_user.streams = streams

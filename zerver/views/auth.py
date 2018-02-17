@@ -46,12 +46,13 @@ import requests
 import time
 import ujson
 
-def create_preregistration_user(email: Text, request: HttpRequest, realm_creation: bool=False,
+def create_preregistration_user(full_name: Text, email: Text, request: HttpRequest,
+                                realm_creation: bool=False,
                                 password_required: bool=True) -> HttpResponse:
     realm = None
     if not realm_creation:
         realm = get_realm(get_subdomain(request))
-    return PreregistrationUser.objects.create(email=email,
+    return PreregistrationUser.objects.create(full_name=full_name, email=email,
                                               realm_creation=realm_creation,
                                               password_required=password_required,
                                               realm=realm)
@@ -79,12 +80,12 @@ def maybe_send_to_registration(request: HttpRequest, email: Text, full_name: Tex
         if settings.ONLY_SSO:
             try:
                 prereg_user = PreregistrationUser.objects.filter(
-                    email__iexact=email, realm=realm).latest("invited_at")
+                    email__iexact=email, realm=realm, full_name=full_name).latest("invited_at")
             except PreregistrationUser.DoesNotExist:
-                prereg_user = create_preregistration_user(email, request,
+                prereg_user = create_preregistration_user(full_name, email, request,
                                                           password_required=password_required)
         else:
-            prereg_user = create_preregistration_user(email, request,
+            prereg_user = create_preregistration_user(full_name, email, request,
                                                       password_required=password_required)
 
         if multiuse_object_key is not None:
